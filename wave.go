@@ -1,6 +1,7 @@
 package wave
 
 import (
+	"io"
 	"os"
 	"strings"
 	"time"
@@ -90,8 +91,17 @@ func (wavefile *WaveFile) writeHeader() {
 	// writing fmt sub chunk
 
 	_file.Write(i32tob(uint32(wavefile.Format.Subchunk1Size)))
+	_file.Write(i16tob(uint16(wavefile.Format.AudioFormat)))
+	_file.Write(i16tob(uint16(wavefile.Format.NumChannels)))
+	_file.Write(i32tob(uint32(wavefile.Format.SampleRate)))
+	_file.Write(i32tob(uint32(wavefile.Format.ByteRate)))
+	_file.Write(i16tob(uint16(wavefile.Format.BlockAlign)))
+	_file.Write(i16tob(uint16(wavefile.Format.BitsPerSample)))
 
 	//writing data sub chunk
+	_file.WriteString(wavefile.Format.Subchunk2ID)
+	_file.WriteString(wavefile.Format.Subchunk2Size)
+	_start_position, _ = _file.Seek(0, io.SeekCurrent)
 
 }
 
@@ -102,6 +112,13 @@ func (wavefile *WaveFile) WriteData(data []uint8) {
 }
 func (wavefile *WaveFile) closeFile() {
 	if _file != nil {
+
+		_end_position, _ = _file.Seek(0, io.SeekEnd)
+		_file.Seek(_start_position, 0)
+		_file.Seek(-4, io.SeekCurrent)
+		_file.Write(i32tob(uint32(_end_position - _start_position)))
+		_file.Seek(4, io.SeekStart)
+		_file.Write(i32tob(uint32(_end_position - 8)))
 		_file.Close()
 	}
 }
@@ -109,6 +126,14 @@ func (wavefile *WaveFile) closeFile() {
 func i32tob(val uint32) []byte {
 	r := make([]byte, 4)
 	for i := uint32(0); i < 4; i++ {
+		r[i] = byte((val >> (8 * i)) & 0xff)
+	}
+	return r
+}
+
+func i16tob(val uint16) []byte {
+	r := make([]byte, 2)
+	for i := uint16(0); i < 2; i++ {
 		r[i] = byte((val >> (8 * i)) & 0xff)
 	}
 	return r
@@ -125,6 +150,8 @@ func btoi32(val []byte) uint32 {
 // global object of WaveFile
 var _wavfile *WaveFile
 var _file *os.File
+var _start_position int64
+var _end_position int64
 
 func GetVersion() string {
 	return "v1.0.0"

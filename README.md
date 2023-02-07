@@ -5,7 +5,7 @@ go package to create wav files .
 
 #steps to do after including process
 create a file named main.go and follow the steps
-
+```
 package main
 
 import (
@@ -24,3 +24,6 @@ func main() {
 	w.CloseFile()
 
 }
+
+
+```

@@ -19,7 +19,7 @@ func TestWave(t *testing.T) {
 func generateTestData(wav *WaveFile) {
 
 	var maxAmplitude float64 = 32760
-	var frequency float64 = 250
+	var frequency float64 = 250.0
 	var duration float64 = 2
 
 	var i float64

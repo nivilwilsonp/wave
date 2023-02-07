@@ -29,7 +29,7 @@ type WaveFileFormat struct {
 	Subchunk2Size string
 }
 
-func (format *WaveFileFormat) SetDefaultFormat() {
+func (format *WaveFileFormat) setDefaultFormat() {
 	format.ChunkID = "RIFF" //Marks the file as a riff file. Characters are each 1 byte long
 
 	format.ChunkSize = "----" /*This is the size of the
@@ -57,7 +57,7 @@ func (format *WaveFileFormat) SetDefaultFormat() {
 	format.Subchunk2Size = "----" //Size of the data section.
 }
 
-func (wavefile *WaveFile) SetFileNameAutomatically() {
+func (wavefile *WaveFile) setFileNameAutomatically() {
 
 	now := time.Now()
 
@@ -110,7 +110,7 @@ func (wavefile *WaveFile) WriteData(data []uint8) {
 		_file.Write(data)
 	}
 }
-func (wavefile *WaveFile) closeFile() {
+func (wavefile *WaveFile) CloseFile() {
 	if _file != nil {
 
 		_end_position, _ = _file.Seek(0, io.SeekEnd)
@@ -159,8 +159,8 @@ func GetVersion() string {
 
 func GetWaveFile() *WaveFile {
 	_wavfile = new(WaveFile)
-	_wavfile.Format.SetDefaultFormat()
-	_wavfile.SetFileNameAutomatically()
+	_wavfile.Format.setDefaultFormat()
+	_wavfile.setFileNameAutomatically()
 	_wavfile.createFile()
 	_wavfile.writeHeader()
 

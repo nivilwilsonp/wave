@@ -81,6 +81,17 @@ func (wavefile *WaveFile) createFile() {
 }
 
 func (wavefile *WaveFile) writeHeader() {
+	// writing RIFF chunk
+	_file.WriteString(wavefile.Format.ChunkID)
+	_file.WriteString(wavefile.Format.ChunkSize)
+	_file.WriteString(wavefile.Format.Format)
+	_file.WriteString(wavefile.Format.Subchunk1ID)
+
+	// writing fmt sub chunk
+
+	_file.Write(i32tob(uint32(wavefile.Format.Subchunk1Size)))
+
+	//writing data sub chunk
 
 }
 
@@ -90,7 +101,25 @@ func (wavefile *WaveFile) WriteData(data []uint8) {
 	}
 }
 func (wavefile *WaveFile) closeFile() {
+	if _file != nil {
+		_file.Close()
+	}
+}
 
+func i32tob(val uint32) []byte {
+	r := make([]byte, 4)
+	for i := uint32(0); i < 4; i++ {
+		r[i] = byte((val >> (8 * i)) & 0xff)
+	}
+	return r
+}
+
+func btoi32(val []byte) uint32 {
+	r := uint32(0)
+	for i := uint32(0); i < 4; i++ {
+		r |= uint32(val[i]) << (8 * i)
+	}
+	return r
 }
 
 // global object of WaveFile

@@ -20,7 +20,7 @@ func generateTestData(wav *WaveFile) {
 
 	var maxAmplitude float64 = 32760
 	var frequency float64 = 250.0
-	var duration float64 = 2
+	var duration float64 = 2.0
 
 	var i float64
 	for i = 0; i < float64(wav.Format.SampleRate)*duration; i++ {

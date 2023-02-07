@@ -72,7 +72,15 @@ type WaveFile struct {
 	FileName string
 }
 
-func (file *WaveFile) writeHeader() {
+func (wavefile *WaveFile) createFile() {
+	var err error
+	_file, err = os.Create(wavefile.FileName)
+	if err != nil {
+		panic(err)
+	}
+}
+
+func (wavefile *WaveFile) writeHeader() {
 
 }
 
@@ -88,6 +96,7 @@ func GetWaveFile() *WaveFile {
 	_wavfile = new(WaveFile)
 	_wavfile.Format.SetDefaultFormat()
 	_wavfile.SetFileNameAutomatically()
+	_wavfile.createFile()
 
 	return _wavfile
 }

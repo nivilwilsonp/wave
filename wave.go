@@ -45,7 +45,7 @@ func (format *WaveFileFormat) setDefaultFormat() {
 	format.AudioFormat = 1 /*PCM = 1 (i.e. Linear quantization)
 	Values other than 1 indicate some
 	form of compression. */
-	format.NumChannels = 1                                                                // Mono = 1, Stereo = 2, etc.
+	format.NumChannels = 2                                                                // Mono = 1, Stereo = 2, etc.
 	format.SampleRate = 44100                                                             // 8000, 44100,48000 etc.
 	format.ByteRate = format.SampleRate * format.NumChannels * (format.Subchunk1Size / 8) //== SampleRate * NumChannels * BitsPerSample/8
 	format.BlockAlign = format.NumChannels * (format.Subchunk1Size / 8)                   //== NumChannels * BitsPerSample/8
@@ -139,13 +139,13 @@ func i16tob(val uint16) []byte {
 	return r
 }
 
-func btoi32(val []byte) uint32 {
-	r := uint32(0)
-	for i := uint32(0); i < 4; i++ {
-		r |= uint32(val[i]) << (8 * i)
-	}
-	return r
-}
+// func btoi32(val []byte) uint32 {
+// 	r := uint32(0)
+// 	for i := uint32(0); i < 4; i++ {
+// 		r |= uint32(val[i]) << (8 * i)
+// 	}
+// 	return r
+// }
 
 // global object of WaveFile
 var _wavfile *WaveFile

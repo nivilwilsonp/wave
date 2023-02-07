@@ -84,6 +84,15 @@ func (wavefile *WaveFile) writeHeader() {
 
 }
 
+func (wavefile *WaveFile) WriteData(data []uint8) {
+	if _file != nil {
+		_file.Write(data)
+	}
+}
+func (wavefile *WaveFile) closeFile() {
+
+}
+
 // global object of WaveFile
 var _wavfile *WaveFile
 var _file *os.File
@@ -97,6 +106,7 @@ func GetWaveFile() *WaveFile {
 	_wavfile.Format.SetDefaultFormat()
 	_wavfile.SetFileNameAutomatically()
 	_wavfile.createFile()
+	_wavfile.writeHeader()
 
 	return _wavfile
 }
